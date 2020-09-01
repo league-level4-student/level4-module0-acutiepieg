@@ -19,7 +19,7 @@ public class GridPanel extends JPanel {
 
 	// 1. Create a 2D array of pixels. Do not initialize it yet.
 
-	Pixel[][] pixels;
+	static Pixel[][] pixels;
 
 	private Color color;
 
@@ -77,8 +77,6 @@ public class GridPanel extends JPanel {
 				g.fillRect(pixels[i][j].x, pixels[i][j].y, pixelWidth, pixelHeight);
 				g.setColor(Color.black);
 				g.drawRect(pixels[i][j].x, pixels[i][j].y, pixelWidth, pixelHeight);
-				System.out.println(pixels[i][j].x);
-				System.out.println(pixels[i][j].y);
 			}
 		}
 	}
