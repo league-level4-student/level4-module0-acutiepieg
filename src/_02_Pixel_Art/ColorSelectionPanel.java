@@ -125,15 +125,13 @@ public class ColorSelectionPanel extends JPanel implements MouseListener, Change
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			for (int i = 0; i < GridPanel.pixels.length; i++) {
 				for (int j = 0; j < GridPanel.pixels[0].length; j++) {
-					GridPanel.pixels[i][j].color = (ois.();
+					GridPanel.pixels[i][j].color = (Color) ois.readObject();
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-
+			
 		} catch (ClassNotFoundException e) {
-			// This can occur if the object we read from the file is not
-			// an instance of any recognized class
 			e.printStackTrace();
 		}
 		System.out.println("loaded file");
