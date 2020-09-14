@@ -1,15 +1,27 @@
 package _02_Pixel_Art;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class PixelArtMaker implements MouseListener{
+public class PixelArtMaker implements MouseListener, ActionListener{
 	private JFrame window;
 	private GridInputPanel gip;
 	private GridPanel gp;
+	private JButton saveButton;
+	private JButton load;
 	ColorSelectionPanel csp;
 	
 	public void start() {
@@ -17,7 +29,6 @@ public class PixelArtMaker implements MouseListener{
 		window = new JFrame("Pixel Art");
 		window.setLayout(new FlowLayout());
 		window.setResizable(false);
-		
 		window.add(gip);
 		window.pack();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,12 +37,22 @@ public class PixelArtMaker implements MouseListener{
 
 	public void submitGridData(int w, int h, int r, int c) {
 		gp = new GridPanel(w, h, r, c);
+		setUpGrid();
+	}
+	
+	public void setUpGrid() {
 		csp = new ColorSelectionPanel();
+		saveButton = new JButton("Save");
+		load = new JButton("Load");
 		window.remove(gip);
 		window.add(gp);
 		window.add(csp);
+		window.add(saveButton, BorderLayout.SOUTH);
+		window.add(load, BorderLayout.SOUTH);
 		gp.repaint();
 		gp.addMouseListener(this);
+		saveButton.addActionListener(this);
+		load.addActionListener(this);
 		window.pack();
 	}
 	
@@ -39,6 +60,42 @@ public class PixelArtMaker implements MouseListener{
 		new PixelArtMaker().start();
 	}
 
+	public void saveFile(GridPanel gp) {
+
+		try (FileOutputStream fos = new FileOutputStream(new File("src/_02_Pixel_Art/savedArt"));
+				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(gp);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("saved file");
+
+	}
+
+	public void loadFile() {
+
+		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt"));
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			
+			window.remove(this.gp);
+			this.gp = (GridPanel) ois.readObject();
+			window.remove(csp);
+			window.remove(saveButton);
+			window.remove(load);
+			window = new JFrame();
+			setUpGrid();
+			ois.close();
+			System.out.println("loaded file");
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
@@ -46,7 +103,6 @@ public class PixelArtMaker implements MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		gp.setColor(csp.getSelectedColor());
-		System.out.println(csp.getSelectedColor());
 		gp.clickPixel(e.getX(), e.getY());
 		gp.repaint();
 	}
@@ -61,5 +117,16 @@ public class PixelArtMaker implements MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == saveButton) {
+			saveFile(gp);
+		} else if (e.getSource() == load) {
+			loadFile();
+		}
+
 	}
 }

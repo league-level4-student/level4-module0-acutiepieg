@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.io.Serializable;
 
 public class Pixel implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public int x;
 	public int y;
 	public Color color;

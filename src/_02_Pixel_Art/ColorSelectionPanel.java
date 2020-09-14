@@ -46,17 +46,13 @@ public class ColorSelectionPanel extends JPanel implements MouseListener, Change
 
 	private JLabel colorLabel;
 	private BufferedImage colorImage;
-	private JButton saveButton;
-	private JButton load;
+	
 
 	public ColorSelectionPanel() {
 		rSlider = new JSlider(JSlider.VERTICAL);
 		gSlider = new JSlider(JSlider.VERTICAL);
 		bSlider = new JSlider(JSlider.VERTICAL);
-		saveButton = new JButton("Save");
-		load = new JButton("Load");
-		saveButton.addActionListener(this);
-		load.addActionListener(this);
+		
 
 		rSlider.setMinimum(0);
 		rSlider.setMaximum(MAX_COLOR - 1);
@@ -92,54 +88,19 @@ public class ColorSelectionPanel extends JPanel implements MouseListener, Change
 		add(gSlider);
 		add(new JLabel("blue"));
 		add(bSlider);
-		add(saveButton, BorderLayout.SOUTH);
-		add(load, BorderLayout.SOUTH);
 
-		
+
 	}
 
 	public Color getSelectedColor() {
 		return color;
 	}
 
-	public void saveFile() {
-
-		try (FileOutputStream fos = new FileOutputStream(new File("src/_02_Pixel_Art/savedArt"));
-				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-			for (int i = 0; i < GridPanel.pixels.length; i++) {
-				for (int j = 0; j < GridPanel.pixels[0].length; j++) {
-					oos.writeObject(GridPanel.pixels[i][j].color + "\n");
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	System.out.println("saved file");
-		
-	}
-
-	public static void loadFile() {
-
-		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt"));
-				ObjectInputStream ois = new ObjectInputStream(fis)) {
-			for (int i = 0; i < GridPanel.pixels.length; i++) {
-				for (int j = 0; j < GridPanel.pixels[0].length; j++) {
-					GridPanel.pixels[i][j].color = (Color) ois.readObject();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		System.out.println("loaded file");
-	}
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 	}
 
 	@Override
@@ -187,11 +148,6 @@ public class ColorSelectionPanel extends JPanel implements MouseListener, Change
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == saveButton) {
-			saveFile();
-		} else if(e.getSource() == load) {
-			loadFile();
-		}
-
+		
 	}
 }
