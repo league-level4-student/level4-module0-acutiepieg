@@ -16,6 +16,8 @@ import java.io.ObjectOutputStream;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import _05_Serialization.SaveData;
+
 public class PixelArtMaker implements MouseListener, ActionListener{
 	private JFrame window;
 	private GridInputPanel gip;
@@ -73,20 +75,47 @@ public class PixelArtMaker implements MouseListener, ActionListener{
 		System.out.println("saved file");
 
 	}
+	
+	
+	public void loadFile2() {
+		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt")); ObjectInputStream ois = new ObjectInputStream(fis)) {
+			window.remove(this.gp);
+			this.gp = (GridPanel) ois.readObject();
+		
+//			window.remove(this.csp);
+//			window.remove(this.saveButton);
+//			window.remove(this.load);
+			window.add(this.gp);
+//			window.add(this.csp);
+//			window.add(this.saveButton);
+//			window.add(this.load);
+			window.pack();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// This can occur if the object we read from the file is not
+			// an instance of any recognized class
+			e.printStackTrace();
+		}
+	}
 
 	public void loadFile() {
 
 		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt"));
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			
-			window.remove(this.gp);
+//			window.remove(this.gp);
+//			window.remove(csp);
+//			window.remove(saveButton);
+//			window.remove(load);
+//			window = new JFrame();
+			
 			this.gp = (GridPanel) ois.readObject();
-			window.remove(csp);
-			window.remove(saveButton);
-			window.remove(load);
-			window = new JFrame();
-			setUpGrid();
+			window.add(gp);
+			window.pack();
+		//	setUpGrid();
 			ois.close();
+			gp.repaint();
 			System.out.println("loaded file");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -125,7 +154,7 @@ public class PixelArtMaker implements MouseListener, ActionListener{
 		if (e.getSource() == saveButton) {
 			saveFile(gp);
 		} else if (e.getSource() == load) {
-			loadFile();
+			loadFile2();
 		}
 
 	}
