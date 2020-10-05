@@ -20,7 +20,7 @@ public class GridPanel extends JPanel implements Serializable{
 
 	// 1. Create a 2D array of pixels. Do not initialize it yet.
 
-	static Pixel[][] pixels;
+	Pixel[][] pixels;
 
 	private Color color;
 
