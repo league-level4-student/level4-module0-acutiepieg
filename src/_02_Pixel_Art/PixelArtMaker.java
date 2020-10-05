@@ -37,22 +37,24 @@ public class PixelArtMaker implements MouseListener, ActionListener {
 
 	public void submitGridData(int w, int h, int r, int c) {
 		gp = new GridPanel(w, h, r, c);
+		saveButton = new JButton("Save");
+		load = new JButton("Load");
 		setUpGrid();
+
+		saveButton.addActionListener(this);
+		load.addActionListener(this);
 	}
 
 	public void setUpGrid() {
 		csp = new ColorSelectionPanel();
-		saveButton = new JButton("Save");
-		load = new JButton("Load");
 		window.remove(gip);
-		window.add(gp);
+		window.add(gp, BorderLayout.WEST);
 		window.add(csp);
 		window.add(saveButton, BorderLayout.SOUTH);
 		window.add(load, BorderLayout.SOUTH);
 		gp.repaint();
 		gp.addMouseListener(this);
-		saveButton.addActionListener(this);
-		load.addActionListener(this);
+		
 		window.pack();
 	}
 
@@ -74,14 +76,17 @@ public class PixelArtMaker implements MouseListener, ActionListener {
 
 	}
 
-	public void loadFile2() {
+	public void loadFile() {
 		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt"));
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			window.remove(this.gp);
+			window.remove(csp);
+			window.remove(saveButton);
+			window.remove(load);
 			this.gp = (GridPanel) ois.readObject();
-			window.add(this.gp, BorderLayout.WEST);
-			window.repaint();
-			window.pack();
+			setUpGrid();
+			
+			System.out.println("load file");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -89,31 +94,6 @@ public class PixelArtMaker implements MouseListener, ActionListener {
 		}
 	}
 
-//	public void loadFile() {
-//
-//		try (FileInputStream fis = new FileInputStream(new File("src/_02_Pixel_Art/savedArt"));
-//				ObjectInputStream ois = new ObjectInputStream(fis)) {
-//
-//			// window.remove(this.gp);
-//			// window.remove(csp);
-//			// window.remove(saveButton);
-//			// window.remove(load);
-//			// window = new JFrame();
-//
-//			this.gp = (GridPanel) ois.readObject();
-//			window.add(gp);
-//			window.pack();
-//			// setUpGrid();
-//			ois.close();
-//			gp.repaint();
-//			System.out.println("loaded file");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -144,7 +124,7 @@ public class PixelArtMaker implements MouseListener, ActionListener {
 		if (e.getSource() == saveButton) {
 			saveFile(gp);
 		} else if (e.getSource() == load) {
-			loadFile2();
+			loadFile();
 		}
 
 	}
